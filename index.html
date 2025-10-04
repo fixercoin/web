@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIXORIUM</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fff;
+      color: #333;
+      font-size: 12px;
+      text-transform: uppercase;
+      overflow-x: hidden;
+      background: linear-gradient(135deg, #f8f4ff 0%, #ffffff 25%, #f0e8ff 50%, #ffffff 75%, #f8f4ff 100%);
+      min-height: 100vh;
+      padding-top: 60px; /* Space for fixed header */
+      padding-bottom: 20px;
+    }
+    
+    /* New White & Purple background */
+    .background-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.5;
+      background: 
+        radial-gradient(circle at 15% 25%, rgba(123, 31, 162, 0.1) 0%, transparent 25%),
+        radial-gradient(circle at 85% 75%, rgba(156, 39, 176, 0.1) 0%, transparent 25%),
+        radial-gradient(circle at 50% 50%, rgba(103, 58, 183, 0.05) 0%, transparent 40%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 244, 255, 0.8) 100%);
+    }
+    
+    .grid-line {
+      position: absolute;
+      background: rgba(123, 31, 162, 0.1);
+    }
+    
+    .grid-horizontal {
+      width: 100%;
+      height: 1px;
+      animation: moveHorizontal 20s linear infinite;
+    }
+    
+    .grid-vertical {
+      width: 1px;
+      height: 100%;
+      animation: moveVertical 15s linear infinite;
+    }
+    
+    @keyframes moveHorizontal {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    @keyframes moveVertical {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
+    }
+    
+    /* Fixed header with dropdown menu */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(123, 31, 162, 0.3);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 16px;
+      font-weight: bold;
+      color: #7b1fa2;
+      text-shadow: 0 0 10px rgba(123, 31, 162, 0.2);
+      letter-spacing: 2px;
+    }
+    
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .dropdown-btn {
+      background: transparent;
+      border: none;
+      color: #666;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    
+    .dropdown-btn:hover {
+      color: #7b1fa2;
+      background: rgba(123, 31, 162, 0.1);
+    }
+    
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      min-width: 180px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(123, 31, 162, 0.2);
+      border-radius: 8px;
+      z-index: 1;
+      overflow: hidden;
+    }
+    
+    .dropdown-content a {
+      color: #666;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: all 0.3s ease;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(123, 31, 162, 0.1);
+    }
+    
+    .dropdown-content a:last-child {
+      border-bottom: none;
+    }
+    
+    .dropdown-content a:hover {
+      background: rgba(123, 31, 162, 0.1);
+      color: #7b1fa2;
+    }
+    
+    .dropdown-content a.active {
+      background: rgba(123, 31, 162, 0.15);
+      color: #7b1fa2;
+    }
+    
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    
+    /* Marquee styles */
+    marquee {
+      background: rgba(255, 255, 255, 0.9);
+      color: #7b1fa2;
+      padding: 12px 0;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      border-top: 1px solid rgba(123, 31, 162, 0.2);
+      border-bottom: 1px solid rgba(123, 31, 162, 0.2);
+    }
+    
+    .marquee-content {
+      display: flex;
+      gap: 40px;
+    }
+    
+    .marquee-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .marquee-icon {
+      color: #7b1fa2;
+      font-size: 12px;
+    }
+    
+    /* Page Intro Styles */
+    .page-intro {
+      position: relative;
+      width: 100%;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 40px 20px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.7);
+      border-bottom: 1px solid rgba(123, 31, 162, 0.2);
+      margin-bottom: 30px;
+    }
+    
+    .intro-title {
+      font-size: 36px;
+      font-weight: bold;
+      color: #7b1fa2;
+      text-shadow: 0 0 20px rgba(123, 31, 162, 0.2);
+      letter-spacing: 4px;
+      margin-bottom: 15px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: titleFadeIn 1s ease forwards 0.5s;
+    }
+    
+    .intro-subtitle {
+      font-size: 14px;
+      color: #666;
+      max-width: 600px;
+      line-height: 1.6;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: subtitleFadeIn 1s ease forwards 1s;
+    }
+    
+    @keyframes titleFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes subtitleFadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Home Intro Specific */
+    #home .page-intro {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 244, 255, 0.8) 100%);
+    }
+    
+    #home .intro-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, #7b1fa2, #9c27b0);
+      box-shadow: 0 0 10px rgba(123, 31, 162, 0.3);
+    }
+    
+    /* Tokens Intro Specific */
+    #tokens .page-intro {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(245, 240, 255, 0.8) 100%);
+    }
+    
+    #tokens .intro-title {
+      background: linear-gradient(90deg, #7b1fa2, #9c27b0, #7b1fa2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+    }
+    
+    /* Wallet Intro Specific */
+    #wallet .page-intro {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(250, 245, 255, 0.8) 100%);
+    }
+    
+    #wallet .intro-title {
+      position: relative;
+    }
+    
+    #wallet .intro-title::before,
+    #wallet .intro-title::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 50px;
+      height: 2px;
+      background: linear-gradient(90deg, #7b1fa2, #9c27b0);
+      box-shadow: 0 0 10px rgba(123, 31, 162, 0.2);
+    }
+    
+    #wallet .intro-title::before {
+      left: -70px;
+    }
+    
+    #wallet .intro-title::after {
+      right: -70px;
+    }
+    
+    /* Whitepaper Intro Specific */
+    #whitepaper .page-intro {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(252, 248, 255, 0.8) 100%);
+    }
+    
+    #whitepaper .intro-title {
+      font-family: 'Courier New', monospace;
+      letter-spacing: 6px;
+      border: 1px solid rgba(123, 31, 162, 0.3);
+      padding: 15px 30px;
+      background: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Team Intro Specific */
+    #team .page-intro {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 244, 255, 0.8) 100%);
+    }
+    
+    #team .intro-title {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    #team .intro-title::before,
+    #team .intro-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #7b1fa2, transparent);
+    }
+    
+    /* Content styles */
+    .content {
+      padding: 40px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .section {
+      display: none;
+      animation: fadeIn 0.5s ease forwards;
+      position: relative;
+      z-index: 5;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .active {
+      display: block;
+    }
+    
+    .section h2 {
+      font-size: 12px;
+      color: #7b1fa2;
+      margin-bottom: 25px;
+      text-shadow: 0 0 10px rgba(123, 31, 162, 0.2);
+      letter-spacing: 2px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, #7b1fa2, #9c27b0);
+      box-shadow: 0 0 10px rgba(123, 31, 162, 0.2);
+    }
+    
+    .section p {
+      line-height: 1.6;
+      color: #555;
+      font-size: 12px;
+      max-width: 800px;
+      margin-bottom: 20px;
+    }
+    
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    ul li {
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(123, 31, 162, 0.1);
+      position: relative;
+      padding-left: 20px;
+      transition: all 0.3s ease;
+      font-size: 12px;
+      color: #555;
+    }
+    
+    ul li:hover {
+      background: rgba(123, 31, 162, 0.05);
+      padding-left: 30px;
+    }
+    
+    ul li:last-child {
+      border-bottom: none;
+    }
+    
+    ul li::before {
+      content: '▶';
+      position: absolute;
+      left: 0;
+      color: #7b1fa2;
+      font-size: 12px;
+    }
+    
+    a.download {
+      display: inline-block;
+      color: #7b1fa2;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 12px 25px;
+      border: 1px solid #7b1fa2;
+      border-radius: 6px;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      background: rgba(123, 31, 162, 0.05);
+      font-size: 12px;
+    }
+    
+    a.download:hover {
+      background: #7b1fa2;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(123, 31, 162, 0.3);
+      transform: translateY(-3px);
+    }
+    
+    a.download::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.5s;
+    }
+    
+    a.download:hover::before {
+      left: 100%;
+    }
+    
+    /* Enhanced Token cards */
+    .token-cards {
+      display: flex;
+      gap: 30px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .token-card {
+      flex: 1;
+      min-width: 300px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 244, 255, 0.9) 100%);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(123, 31, 162, 0.2);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+    }
+    
+    .token-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #7b1fa2, #9c27b0);
+    }
+    
+    .token-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(123, 31, 162, 0.15);
+      border-color: #7b1fa2;
+    }
+    
+    .token-card h3 {
+      color: #7b1fa2;
+      font-size: 12px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .token-card h3 i {
+      font-size: 12px;
+    }
+    
+    .token-card p {
+      font-size: 12px;
+      color: #555;
+    }
+    
+    .token-card strong {
+      font-size: 12px;
+      color: #9c27b0;
+    }
+    
+    /* Enhanced Mint address styles */
+    .mint-address {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.5);
+      padding: 10px 15px;
+      border-radius: 6px;
+      margin: 10px 0;
+      border: 1px solid rgba(123, 31, 162, 0.2);
+    }
+    
+    .mint-text {
+      flex: 1;
+      font-family: monospace;
+      font-size: 12px;
+      color: #555;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .copy-btn {
+      background: rgba(123, 31, 162, 0.05);
+      color: #7b1fa2;
+      border: 1px solid #7b1fa2;
+      border-radius: 4px;
+      padding: 6px 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+    
+    .copy-btn:hover {
+      background: #7b1fa2;
+      color: #fff;
+    }
+    
+    /* Enhanced Team cards */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+    
+    .team-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 244, 255, 0.9) 100%);
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(123, 31, 162, 0.2);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+    }
+    
+    .team-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(123, 31, 162, 0.15);
+      border-color: #7b1fa2;
+    }
+    
+    .team-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #7b1fa2, #9c27b0);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .team-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .team-icon {
+      font-size: 24px;
+      color: #7b1fa2;
+      margin-bottom: 15px;
+      background: rgba(123, 31, 162, 0.1);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+    }
+    
+    .team-card h3 {
+      font-size: 12px;
+      margin-bottom: 5px;
+      color: #7b1fa2;
+    }
+    
+    .team-card p {
+      font-size: 12px;
+      color: #666;
+    }
+    
+    /* Footer */
+    footer {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+      letter-spacing: 1px;
+      border-top: 1px solid rgba(123, 31, 162, 0.2);
+    }
+    
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+    
+    .social-links a {
+      color: #666;
+      font-size: 12px;
+      transition: all 0.3s ease;
+    }
+    
+    .social-links a:hover {
+      color: #7b1fa2;
+      transform: translateY(-3px);
+    }
+    
+    /* Responsive design - Fixed for mobile */
+    @media (max-width: 768px) {
+      .content {
+        padding: 20px;
+      }
+      
+      .token-cards, .team-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header {
+        padding: 12px 15px;
+      }
+      
+      .logo {
+        font-size: 14px;
+      }
+      
+      .intro-title {
+        font-size: 28px;
+      }
+      
+      .intro-subtitle {
+        font-size: 12px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .mint-text {
+        font-size: 10px;
+      }
+      
+      .intro-title {
+        font-size: 24px;
+      }
+    }
+    
+    /* Particle effects */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .particle {
+      position: absolute;
+      background: #7b1fa2;
+      border-radius: 50%;
+      opacity: 0.2;
+      animation: float 15s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.2;
+      }
+      90% {
+        opacity: 0.2;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fixed header with dropdown menu -->
+  <div class="header">
+    <div class="logo">EMERGING CRYPTO NETWORK</div>
+    <div class="dropdown">
+      <button class="dropdown-btn">
+        <i class="fas fa-ellipsis-v"></i>
+      </button>
+      <div class="dropdown-content">
+        <a href="#" class="active" onclick="showSection('home')">HOME</a>
+        <a href="#" onclick="showSection('tokens')">TOKENS</a>
+        <a href="#" onclick="showSection('wallet')">WALLET</a>
+        <a href="#" onclick="showSection('whitepaper')">WHITEPAPER</a>
+        <a href="#" onclick="showSection('team')">TEAM</a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Animated background -->
+  <div class="background-animation" id="gridAnimation"></div>
+  <div class="particles" id="particles"></div>
+  
+  <!-- Marquee -->
+  <script src="https://widgets.coingecko.com/gecko-coin-price-marquee-widget.js"></script>
+  <gecko-coin-price-marquee-widget locale="en" dark-mode="false" coin-ids="" initial-currency="usd"></gecko-coin-price-marquee-widget>
+  
+  <!-- Content Sections -->
+  <div class="content">
+    <!-- HOME -->
+    <div id="home" class="section active">
+      <div class="page-intro">
+        <h1 class="intro-title">FIXORIUM</h1>
+        <p class="intro-subtitle">A NEXT-GENERATION DECENTRALIZED ECOSYSTEM BUILT TO EMPOWER USERS WITH SECURE WALLETS, TOKEN LOCKERS, AND CROSS-CHAIN UTILITIES</p>
+      </div>
+      
+      <ul>
+        <li>FIXORIUM IS A NEXT-GENERATION DECENTRALIZED ECOSYSTEM</li>
+        <li>BUILT TO EMPOWER USERS WITH SECURE WALLETS</li>
+        <li>TOKEN LOCKERS, AND CROSS-CHAIN UTILITIES</li>
+        <li>OUR MISSION IS TO PROVIDE A TRUSTED PLATFORM</li>
+        <li>WHERE USERS CAN STORE, TRADE, AND GROW DIGITAL ASSETS</li>
+        <li>WITH FULL TRANSPARENCY</li>
+      </ul>
+      
+      <div class="token-cards">
+        <div class="token-card">
+          <h3><i class="fas fa-rocket"></i> OUR VISION</h3>
+          <p>To create a seamless decentralized ecosystem that bridges traditional finance with the blockchain world, providing users with cutting-edge tools for asset management and growth.</p>
+        </div>
+        <div class="token-card">
+          <h3><i class="fas fa-shield-alt"></i> SECURITY FIRST</h3>
+          <p>We prioritize security above all else, implementing multi-layered protection protocols to ensure your digital assets are always safe within the Fixorium ecosystem.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOKENS -->
+    <div id="tokens" class="section">
+      <div class="page-intro">
+        <h1 class="intro-title">TOKENS</h1>
+        <p class="intro-subtitle">DISCOVER THE CORE TOKENS POWERING THE FIXORIUM ECOSYSTEM - FIXERCOIN FOR TRADING AND GOVERNANCE, LOCKER FOR SECURE ASSET MANAGEMENT</p>
+      </div>
+      
+      <p> FIXERCOIN : FIXERCOIN IS THE CORE TOKEN OF THE FIXORIUM ECOSYSTEM, DESIGNED FOR TRADING, STAKING, AND GOVERNANCE. IT ENABLES USERS TO PARTICIPATE IN CROSS-CHAIN UTILITIES WITH LOW FEES AND HIGH SPEED.</p>
+      
+      <p>LOCKER : LOCKER TOKEN IS A UTILITY DESIGNED TO SECURELY LOCK DIGITAL ASSETS. IT BUILDS TRUST IN PROJECTS AND ENSURES FUNDS ARE SAFEGUARDED FOR INVESTORS, MAKING IT A KEY FEATURE OF OUR ECOSYSTEM.</p>
+       
+      <div class="token-cards">
+        <div class="token-card">
+          <h3><i class="fas fa-coins"></i> FIXERCOIN </h3>
+          <p><strong>Symbol:</strong> FIXERCOIN</p>
+          <p><strong>Total Supply:</strong> 100,000,0000</p>
+          <p><strong>Blockchain:</strong> solana</p>
+          
+          <!-- Fixercoin Mint Address with Copy Option -->
+          <div class="mint-address">
+            <div class="mint-text">H4qKn8FMFha8jJuj8xMryMqRhH3h7GjLuxw7TVixpump</div>
+            <button class="copy-btn" onclick="copyToClipboard('H4qKn8FMFha8jJuj8xMryMqRhH3h7GjLuxw7TVixpump')">COPY</button>
+          </div>
+                                         
+          <p><strong>Use Cases:</strong> Payments, Staking, Governance</p>
+        </div>
+        <div class="token-card">
+          <h3><i class="fas fa-coins"></i> LOCKER </h3>
+          <p><strong>Symbol:</strong> LOCKER</p>
+          <p><strong>Total Supply:</strong> 100,000,0000</p>
+          <p><strong>Blockchain:</strong> Solana</p>
+          
+          <!-- Locker Mint Address with Copy Option -->
+          <div class="mint-address">
+            <div class="mint-text">EN1nYrW6375zMPUkpkGyGSEXW8WmAqYu4yhf6xnGpump</div>
+            <button class="copy-btn" onclick="copyToClipboard('EN1nYrW6375zMPUkpkGyGSEXW8WmAqYu4yhf6xnGpump')">COPY</button>
+          </div>
+          
+          <p><strong>Use Cases:</strong> Asset Locking, Trust Building</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- WALLET -->
+    <div id="wallet" class="section">
+      <div class="page-intro">
+        <h1 class="intro-title">WALLET</h1>
+        <p class="intro-subtitle">SECURE STORAGE AND MANAGEMENT OF DIGITAL ASSETS WITH MULTI-CHAIN SUPPORT AND AN INTUITIVE INTERFACE</p>
+      </div>
+      
+      <p>THE FIXORIUM WALLET PROVIDES SECURE STORAGE AND MANAGEMENT OF DIGITAL ASSETS. WITH MULTI-CHAIN SUPPORT AND AN EASY-TO-USE INTERFACE, USERS CAN SAFELY HOLD, SEND, AND RECEIVE TOKENS.</p>
+      
+      <div class="token-cards">
+        <div class="token-card">
+          <h3><i class="fas fa-mobile-alt"></i> MOBILE APP</h3>
+          <p>Download our mobile application for iOS and Android to manage your assets on the go with biometric security and intuitive interface.</p>
+        </div>
+        <div class="token-card">
+          <h3><i class="fas fa-desktop"></i> DESKTOP VERSION</h3>
+          <p>Our desktop wallet offers advanced features for power users, including multi-signature support and integration with hardware wallets.</p>
+        </div>
+        <div class="token-card">
+          <h3><i class="fas fa-plug"></i> BROWSER EXTENSION</h3>
+          <p>Seamlessly interact with dApps using our browser extension that supports all major browsers and popular decentralized applications.</p>
+        </div>
+      </div>
+     
+      <p><a href="https://files.appsgeyser.com/FIXORIUM_19161589.apk" class="download"><i class="fas fa-download"></i> DOWNLOAD FIXORIUM WALLET</a></p>
+    </div>
+
+    <!-- WHITEPAPER -->
+    <div id="whitepaper" class="section">
+      <div class="page-intro">
+        <h1 class="intro-title">WHITEPAPER</h1>
+        <p class="intro-subtitle">EXPLORE OUR VISION, TOKENOMICS, AND TECHNICAL ARCHITECTURE THAT POWERS THE FIXORIUM ECOSYSTEM</p>
+      </div>
+      
+      <p>DOWNLOAD THE FULL FIXORIUM WHITEPAPER TO LEARN MORE ABOUT OUR VISION, TOKENOMICS, AND ROADMAP.</p>
+      
+      <div class="token-cards">
+        <div class="token-card">
+          <h3><i class="fas fa-road"></i> ROADMAP</h3>
+          <p>Explore our development timeline, from initial concept to future expansions and partnerships in the blockchain space.</p>
+        </div>
+        <div class="token-card">
+          <h3><i class="fas fa-chart-line"></i> TOKENOMICS</h3>
+          <p>Detailed breakdown of token distribution, vesting schedules, and economic models that power the Fixorium ecosystem.</p>
+        </div>
+        <div class="token-card">
+          <h3><i class="fas fa-cogs"></i> TECHNOLOGY</h3>
+          <p>Deep dive into the technical architecture, security protocols, and innovative features that set Fixorium apart.</p>
+        </div>
+      </div>
+      
+      <p><a href="FIXERCOIN_WHITEPAPER.pdf" class="download"><i class="fas fa-file-pdf"></i> FIXERCOIN</a>
+      
+      <a href="LOCKER_WHITEPAPER.pdf" class="download"> <i class="fas fa-file-pdf"></i>LOCKER TOKEN</a>
+       </p>
+    
+    </div>
+
+    <!-- TEAM -->
+    <div id="team" class="section">
+      <div class="page-intro">
+        <h1 class="intro-title">TEAM</h1>
+        <p class="intro-subtitle">MEET THE DEDICATED PROFESSIONALS BEHIND THE FIXORIUM ECOSYSTEM</p>
+      </div>
+      
+      <p>MEET THE DEDICATED PROFESSIONALS BEHIND THE FIXORIUM ECOSYSTEM, BRINGING TOGETHER DECADES OF EXPERIENCE IN BLOCKCHAIN TECHNOLOGY, FINANCE, AND SOFTWARE DEVELOPMENT.</p>
+      
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-icon"><i class="fas fa-code"></i></div>
+          <h3>AMEER NAWAZ KHAN</h3>
+          <p>PROJECT & CONTRACT ENGINEER</p>
+          <p>fixoriumdev@gmail.com</p>
+        </div>
+        <div class="team-card">
+          <div class="team-icon"><i class="fas fa-file-contract"></i></div>
+          <h3>AAMIR RIAZ</h3>
+          <p>PROJECT CONSULTANT</p>
+          <p>aamirbusiness10@gmail.com</p>
+        </div>
+        <div class="team-card">
+          <div class="team-icon"><i class="fas fa-palette"></i></div>
+          <h3>AZAM BHATTI</h3>
+          <p>FINANCE & ACCOUNTS</p>
+          <p>azambhatti2011@gmail.com</p>
+        </div>
+        <div class="team-card">
+          <div class="team-icon"><i class="fas fa-bullhorn"></i></div>
+          <h3>CH MOHSIN</h3>
+          <p>SOCIAL MEDIA ACTIVIST</p>
+          <p></p>
+        </div>
+        <div class="team-card">
+          <div class="team-icon"><i class="fas fa-tasks"></i></div>
+          <h3>CH HAMID</h3>
+          <p>PROJECT DEVELOPMENT ADVISOR</p>
+          <p>hamidc056@gmail.com</p>
+        </div>
+        <div class="team-card">
+          <div class="team-icon"><i class="fas fa-tasks"></i></div>
+          <h3>SAIF UR RAHMAN KHAN</h3>
+          <p>LEGAL & COMPLIANCE</p>
+        </div>
+        
+        <div class="team-card">
+          <div class="team-icon"><i class="fas fa-tasks"></i></div>
+          <h3>DANIYAL KHAN</h3>
+          <p>YOUTUBE & MARKETING</p>
+          <p></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>FIXORIUM ECOSYSTEM © 2025 | ALL RIGHTS RESERVED</p>
+    <div class="social-links">
+      <a href="https://x.com/fixorium"><i class="fab fa-twitter"></i></a>
+      <a href="https://t.me/fixorium"><i class="fab fa-telegram"></i></a>
+      <a href="#"><i class="fab fa-discord"></i></a>
+      <a href="https://gitlab.com/fixorium/official/-/blob/main/index.html"><i class="fab fa-github"></i></a>
+      <a href="#"><i class="fab fa-medium"></i></a>
+    </div>
+  </footer>
+
+  <script>
+    // Section navigation
+    function showSection(id) {
+      const sections = document.querySelectorAll('.section');
+      const menuItems = document.querySelectorAll('.dropdown-content a');
+      
+      sections.forEach(sec => sec.classList.remove('active'));
+      menuItems.forEach(item => item.classList.remove('active'));
+      
+      document.getElementById(id).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+    
+    // Copy to clipboard function
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(function() {
+        // Change button text temporarily to indicate success
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'COPIED!';
+        button.style.background = '#7b1fa2';
+        button.style.color = '#fff';
+        
+        setTimeout(function() {
+          button.textContent = originalText;
+          button.style.background = 'rgba(123, 31, 162, 0.05)';
+          button.style.color = '#7b1fa2';
+        }, 2000);
+      }, function(err) {
+        console.error('Could not copy text: ', err);
+      });
+    }
+    
+    // Create animated grid background
+    function createGrid() {
+      const gridContainer = document.getElementById('gridAnimation');
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      
+      // Create horizontal lines
+      for (let i = 0; i < height; i += 40) {
+        const line = document.createElement('div');
+        line.className = 'grid-line grid-horizontal';
+        line.style.top = i + 'px';
+        line.style.animationDelay = (Math.random() * 5) + 's';
+        gridContainer.appendChild(line);
+      }
+      
+      // Create vertical lines
+      for (let i = 0; i < width; i += 40) {
+        const line = document.createElement('div');
+        line.className = 'grid-line grid-vertical';
+        line.style.left = i + 'px';
+        line.style.animationDelay = (Math.random() * 5) + 's';
+        gridContainer.appendChild(line);
+      }
+    }
+    
+    // Create floating particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Random size between 1px and 3px
+        const size = Math.random() * 2 + 1;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        
+        // Random position
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.top = Math.random() * 100 + 'vh';
+        
+        // Random animation duration
+        const duration = Math.random() * 20 + 10;
+        particle.style.animationDuration = duration + 's';
+        
+        // Random delay
+        particle.style.animationDelay = Math.random() * 5 + 's';
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+    
+    // Initialize animations when page loads
+    window.addEventListener('load', function() {
+      createGrid();
+      createParticles();
+    });
+    
+    // Add hover effects to team cards
+    document.addEventListener('DOMContentLoaded', function() {
+      const teamCards = document.querySelectorAll('.team-card');
+      
+      teamCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0) scale(1)';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
